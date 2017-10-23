@@ -42,18 +42,16 @@
 
 
   function draw(dataArray){
+    console.log(dataArray);
     var rects = svg.selectAll(".sq")
                     .data(dataArray)
-                    .exit()
-                    // .remove()
-                    // .enter()
-                    // .append()
-    .transition()
-    .duration(1000)
-    .attr("width",0)
-    .attr("height",0)
-    .attr("fill", "red")
-    .remove();
+
+    // .transition()
+    // .duration(1000)
+    // .attr("width",0)
+    // .attr("height",0)
+    // .attr("fill", "red")
+    // .remove();
 
     var enterRects = rects.enter()
     .append("rect")
@@ -68,7 +66,7 @@
     rects.merge(enterRects)
     .transition().duration(1000)
     .attr("width", function(d) {
-      return d;
+      return d + "px";
     })
     .attr("height", 60)
     .attr("fill", "green");
@@ -77,7 +75,7 @@
    </script>
 
 
-  <button onclick="draw([10,8])" style="position:absolute; left:50px; top:200px;">Switch
+  <button onclick="draw([10,8,90,20])" style="position:absolute; left:50px; top:200px;">Switch
   </button>
 
 

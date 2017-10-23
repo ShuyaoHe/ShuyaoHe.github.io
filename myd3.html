@@ -1,24 +1,39 @@
+<!DOCTYPE html>
 <html class="gr__dave-landry_com"><head>
     <meta charset="utf-8">
     <title>D3 Intro</title>
   </head>
   <body data-gr-c-s-loaded="true">
-    <svg id="mysvg" width="1007" height="639">
-      <circle r="2" cy="50" cx="50" class="dot" fill="rgb(0, 128, 0)">
-    </circle><circle r="4" cy="50" cx="100" class="dot" fill="rgb(0, 128, 0)">
-    </circle><circle r="6" cy="50" cx="150" class="dot" fill="rgb(0, 128, 0)">
-    </circle><circle r="8" cy="50" cx="200" class="dot" fill="rgb(0, 128, 0)"></circle></svg>
-
+    <svg id="mysvg" width="460" height="639">
+    </circle></svg>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-
 
   var svg = d3.select("#mysvg")
     .attr("width", window.innerWidth)
     .attr("height", window.innerHeight);
 
   function draw(dataArray) {
+
+    var labels = svg.selectAll(".label")
+        .data(dataArray);
+
+        labels.exit().remove();
+
+        var enterLabels = labels.enter().append("text")
+        .attr("class", "label")
+        .attr("y", "10")
+        .attr("font-size", "8px")
+        .attr("text-anchor", "middle")
+        .attr("x", function(d, index){
+          return 50 * (index + 1);
+        });
+
+        labels.merge(enterLabels)
+        .text(function(d) {
+          return d.country;
+        });
 
     var circles = svg.selectAll(".dot")
       .data(dataArray);
@@ -40,14 +55,21 @@
     circles.merge(enterCircles)
       .transition().duration(1000)
       .attr("r", function(d) {
-        return d;
+        return d.value;
       })
-      .attr("fill", "green");
+      .attr("fill", function(d){
+        return d.color;
+      });
 
   }
 
-  draw([2, 4]);
+  // draw([2, 4, 6, 8]);
 
+  d3.json("data.json", function(error, data){
+    console.log(data);
+    draw(data);
+  });
+  console.log("hi!");
 
 </script>
 
