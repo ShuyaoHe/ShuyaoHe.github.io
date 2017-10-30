@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang = "en">
+      <head>
+        <meta charset = "UTF-8" />
+         <title> My Data </title>
+         <link href="style.css" rel = "stylesheet" type ="text/css">
+
+
+
+      </head>
+      <body>
+
+          <div id = "nav">
+
+           <ul>
+             <li><a href = "index.html">HOME</a></li>
+             <li><a href = "project.html">PROJECT</a>
+             <div class ="owrap">
+               <ol>
+                 <li>
+                   <a href="text.html">PROJECT I</a></li>
+                   <a href="project 3.html">PROJECT II</a></li>
+                   <a href="d3.html">PROJECT III</a></li>
+                   <a href="final.html">FINAL</a></li>
+                   <a href="data.html">DATA</a></li>
+               </ol>
+
+             </div></li>
+             <li><a href = "text.html">CONTACT ME</a></li>
+           </ul>
+         </div>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+<script>
+
+d3.csv("TransAge.csv", function(error, data) {
+console.log(data);
+});
+
+d3.csv("HowMany.csv", function(error, data) {
+console.log(data);
+});
+
+d3.csv("TransgenderByPopulation.csv", function(error, data) {
+console.log(data);
+});
+d3.csv("TransgenderByRace.csv", function(error, data) {
+console.log(data);
+});
+</script>
+
+</body>
+</html>

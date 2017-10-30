@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+     <head>
+       <meta charset="utf-8" />
+       <title>My Homepage</title>
+       <link rel="stylesheet" href="styleforhomepage.css" />
+
+     </head>
+     <body>
+       <h1>
+         Hello world!
+       </h1>
+       <a href="myhomepage.html">text</a>
+
+          <svg id="mysvg">
+    </svg>
+    <div id = "popup" style ="border: 1px solid black; blackground-color: white; display: none;">
+
+    </div>
+      <script src="https://d3js.org/d3.v4.min.js"></script>
+
+      <script>
+        d3.select("body").style("margin", "0px");
+
+        var margin = 100;
+
+        var svg = d3.select("#mysvg")
+        .style("background-color", "lightgray")
+        .attr("width", window.innerWidth)
+        .attr("height", window.innerHeight)
+        .attr("transform", "translate("+ margin +", "+ margin +")");
+
+        var data = [0.2, 3.2, 2.7, 4.7, 1.4, 4.9];
+
+        var xScale = d3.scaleLinear()
+          .domain(d3.extent(data))
+          .range([margin, window.innerWidth - margin])
+
+        var yScale = d3.scaleLinear()
+        .domain([0,data.length - 1])
+        .range([margin, window.innerHeight - margin])
+
+        var circles = svg.selectAll("circle")
+        .data(data)
+
+        circles.enter().append("circle")
+        .attr("r", 25)
+        .attr("cy", function(d, i) {
+          return yScale(i);
+        })
+        .attr("cx", function(d) {
+          return xScale(d);
+        })
+
+        .on("mouseover", function(d,i){
+          d3.select("#popup")
+          .style("display", "block")
+          .style("position", "absolute")
+          .style("left", xScale(d) + "px")
+          .style("top", yScale(i) + "px")
+          .text(d);
+        })
+        .on("mouseout", function(){
+          d3.select("#popup")
+          .style("display", "none");
+        });
+
+        var axes = d3.axisBottom(xScale);
+        svg.append("g")
+        .attr("transform", "translate(0, "+ (window.innerHeight - margin/2) + ")")
+        .call(axes);
+
+
+
+      </script>
+
+
+     </body>
+
+</html>
