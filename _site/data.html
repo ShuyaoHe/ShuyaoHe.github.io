@@ -34,20 +34,38 @@
 
 <script>
 
-d3.csv("TransAge.csv", function(error, data) {
-console.log(data);
-});
+d3.queue()
+  .defer(d3.csv, "HowManyTrans.csv")
 
-d3.csv("HowMany.csv", function(error, data) {
-console.log(data);
-});
+  .awaitAll(function(error, data){
 
-d3.csv("TransgenderByPopulation.csv", function(error, data) {
-console.log(data);
-});
-d3.csv("TransgenderByRace.csv", function(error, data) {
-console.log(data);
-});
+
+
+   var transData = data[0];
+
+   for (var i = 0; i < transData.length; i++) {
+     console.log(transData[i]);
+   }
+
+    transData.forEach(function(d, i){
+
+      for ( var poop in d){
+        var num = +d[poop];
+        if (isNaN(num) == false) {
+          d[poop] = num;
+        }
+  //       else if (poop.indexOf("[VA") == 0) {
+  //         d[poop] = 0;
+  //       }
+      }
+    });
+  console.log(transData);
+  // var stateData = transData.filter(function(d, i){
+  //   return d[""]
+  });
+
+
+
 </script>
 
 </body>
