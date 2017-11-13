@@ -4,13 +4,15 @@
         <meta charset = "UTF-8" />
          <title> My Data </title>
          <link href="style.css" rel = "stylesheet" type ="text/css">
+         <!-- <script src="/d3-geomap/vendor/d3.geomap.dependencies.min.js"></script>
+         <script src="/d3-geomap/js/d3.geomap.min.js"></script> -->
 
 
 
       </head>
       <body>
-
-          <div id = "nav">
+<!-- creat menu bar -->
+          <!-- <div id = "nav">
 
            <ul>
              <li><a href = "index.html">HOME</a></li>
@@ -28,14 +30,81 @@
              </div></li>
              <li><a href = "text.html">CONTACT ME</a></li>
            </ul>
-         </div>
+         </div> -->
+
+
+         <button class="orange">Switch to Transgender Teens</button>
+
+
+
+  <svg width="1000" height="600" viewbox="0 0 1200 800">
+    <g id = "map" transform= "translate(280 250)"></g>
+
+    <rect id ="intro" x="-80px" y="40px" width="330px" height="1480px" fill="rgb(202,105,24)"></rect>
+    <text id ="headline1" x="-50" y="140" font-size="30" font-family="Helvetica" font-weight="bold" fill="white">HOW MANY</text>
+    <text id ="headline2" x="-50" y="180" font-size="30" font-family="Helvetica" font-weight="bold" fill="white">TRANSGENDERS</text>
+    <text id ="headline3" x="-50" y="220" font-size="30" font-family="Helvetica" font-weight="bold" fill="white">IN AMERICA?</text>
+    <rect id ="decobar1" x="-55" y="240" width="280" height="6" fill="white"></rect>
+    <text id ="datasource" x="-48" y="280" font-size="20" font-family="Helvetica" fill="white">Datasource: Williams Institute</text>
+
+
+    <text id ="US" x="630" y="100" font-size="25" font-family="Helvetica" font-weight="bold" fill="black">Population:</text>
+    <text id ="USno" x="800" y="100" font-size="50" font-family="Helvetica" font-weight="bold" fill="black">1,397,150</text>
+    <text id ="US" x="630" y="180" font-size="25" font-family="Helvetica" font-weight="bold" fill="black">Percentage:</text>
+    <text id ="USno" x="800" y="180" font-size="50" font-family="Helvetica" font-weight="bold" fill="black">0.58%</text>
+
+
+
+
+  </svg>
+<a href="index.html" style="position:absolute; left:140px; top:610px; font-size:13px;">>>>>BACK</a>
+<a href="http://tfolkman.github.io/state_map/index.html">Reference</a>
+<div class="usmap">
+    <img src = "picture1.png" height = "100">
+</div>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://unpkg.com/topojson@3"></script>
+<script src="http://d3js.org/colorbrewer.v1.min.js"></script>
+
 
 <script>
 
+var svg = d3.select("#map")
+  .attr("width", window.innerWidth)
+  .attr("height", window.innerHeight);
+
+// Making a map //
+d3.json("us.json", function(error, data) {
+  var geoJSON = topojson.feature(data, data.objects.states);
+
+  var proj = d3.geoAlbersUsa()
+    .fitSize([window.innerWidth/1.2, window.innerHeight/1.2], geoJSON);
+
+
+  var path = d3.geoPath()
+    .projection(proj);
+
+  var states = svg.selectAll("path")
+    .data(geoJSON.features);
+
+    states.enter().append("path")
+    .attr("d", function(d) {
+      return path(d);
+    })
+    .attr()
+
+
+
+   console.log(geoJSON);
+  console.log(data);
+});
+
+
+// Data Organize //
 d3.queue()
   .defer(d3.csv, "HowManyTrans.csv")
+
 
   .awaitAll(function(error, data){
 
@@ -54,17 +123,32 @@ d3.queue()
         if (isNaN(num) == false) {
           d[poop] = num;
         }
-  //       else if (poop.indexOf("[VA") == 0) {
-  //         d[poop] = 0;
-  //       }
+
       }
     });
   console.log(transData);
-  // var stateData = transData.filter(function(d, i){
-  //   return d[""]
+
   });
 
-
+  // var format = function(d){
+  //   d = d * 1000;
+  //   return d3.format(',.02f')(d) + "%";
+  // }
+  //
+  // var map = d3.geomapChoropleth()
+  //     .geofile('us.json')
+  //     .projection(d3.geoAlbersUsa)
+  //     .colors(colorbrewer.YlGnBu[9])
+  //     .column('[VA]PERCENT')
+  //     .format(format)
+  //     .legend(true)
+  //     .unitId('fips');
+  //
+  // d3.csv('HowManyTrans.csv', function(error, data){
+  //   d3.select('#map')
+  //      .datum(data)
+  //      .call(map.draw, map);
+  // });
 
 </script>
 
