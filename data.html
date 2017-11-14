@@ -33,12 +33,12 @@
          </div> -->
 
 
-         <button class="orange">Switch to Transgender Teens</button>
+  <button class="orange">Switch to Transgender Teens</button>
 
 
 
   <svg width="1000" height="600" viewbox="0 0 1200 800">
-    <g id = "map" transform= "translate(280 250)"></g>
+    <g id = "map" transform= "translate(280 350)"></g>
 
     <rect id ="intro" x="-80px" y="40px" width="330px" height="1480px" fill="rgb(202,105,24)"></rect>
     <text id ="headline1" x="-50" y="140" font-size="30" font-family="Helvetica" font-weight="bold" fill="white">HOW MANY</text>
@@ -57,11 +57,12 @@
 
 
   </svg>
-<a href="index.html" style="position:absolute; left:140px; top:610px; font-size:13px;">>>>>BACK</a>
-<a href="http://tfolkman.github.io/state_map/index.html">Reference</a>
-<div class="usmap">
-    <img src = "picture1.png" height = "100">
-</div>
+
+      <a href="index.html" style="position:absolute; left:140px; top:610px; font-size:13px;">>>>>BACK</a>
+      <a href="http://tfolkman.github.io/state_map/index.html">Reference</a>
+      <div class="usmap">
+          <img src = "picture1.png" height = "100">
+      </div>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://unpkg.com/topojson@3"></script>
@@ -70,65 +71,126 @@
 
 <script>
 
-var svg = d3.select("#map")
-  .attr("width", window.innerWidth)
-  .attr("height", window.innerHeight);
+ var stateNames = {
 
-// Making a map //
-d3.json("us.json", function(error, data) {
-  var geoJSON = topojson.feature(data, data.objects.states);
+   "AL": "Alabama",
+   "AK": "Alaska",
+   "AZ": "Arizona",
+   "AR": "Arkansas",
+   "CA": "California",
+   "CO": "Colorado",
+   "CT": "Connecticut",
+   "DE": "Delaware",
+   "FL": "Florida",
+   "GA": "Georgia",
+   "HI": "Hawaii",
+   "ID": "Idaho",
+   "IL": "Illinois",
+   "IN": "Indiana",
+   "IA": "Iowa",
+   "KS": "Kansas",
+   "KY": "Kentucky",
+   "LA": "Louisiana",
+   "ME": "Maine",
+   "MD": "Maryland",
+   "MA": "Massachusetts",
+   "MI": "Michigan",
+   "MN": "Minnesota",
+   "MS": "Mississippi",
+   "MO": "Missouri",
+   "MT": "Montana",
+   "NE": "Nebraska",
+   "NV": "Nevada",
+   "NJ": "New Jersey",
+   "NM": "New Mexico",
+   "NY": "New York",
+   "NH": "New Hampshire",
+   "NC": "North Carolina",
+   "ND": "North Dakota",
+   "OH": "Ohio",
+   "OK": "Oklahoma",
+   "OR": "Oregon",
+   "PA": "Pennsylvania",
+   "RI": "Rhode Island",
+   "SC": "South Carolina",
+   "SD": "South Dakota",
+   "TN": "Tennessee",
+   "TX": "Texas",
+   "UT":  "Utah",
+   "VT": "Vermont",
+   "VA": "Virginia",
+   "WA": "Washington",
+   "WV": "West Virginia",
+   "WI": "Wisconsin",
+   "WY": "Wyoming"
 
-  var proj = d3.geoAlbersUsa()
-    .fitSize([window.innerWidth/1.2, window.innerHeight/1.2], geoJSON);
+ };
 
+  var width = 1000, height = 600;
 
-  var path = d3.geoPath()
-    .projection(proj);
+  var svg = d3.select("#map")
+    .attr("width", window.innerWidth)
+    .attr("height", window.innerHeight);
 
-  var states = svg.selectAll("path")
-    .data(geoJSON.features);
+  var colorScale = d3.scaleLinear()
+    .domain([0, 0.002, 0.004, 0.006, 0.008])
+    .range(["#FFFDFE","#FFF6E4", "#FFB123", "#E8612D", "#C01803"]);
 
-    states.enter().append("path")
-    .attr("d", function(d) {
-      return path(d);
-    })
-    .attr()
+  // Data Organize //
+  d3.queue()
+    .defer(d3.json, "us.json")
+    .defer(d3.csv, "HowManyTrans.csv")
+    .awaitAll(function(error, data){
 
+      var topoData = data[0];
 
+     var transData = data[1];
+     var transLookup = {};
+      transData.forEach(function(d, i){
 
-   console.log(geoJSON);
-  console.log(data);
-});
+        for ( var poop in d){
+          var num = +d[poop];
+          if (isNaN(num) == false) {
+            d[poop] = num;
+          }
+        }
+        transLookup[d.STATE] = d;
+      });
+    console.log(transData);
 
+// converts Topojson to
+    var geoJSON = topojson.feature(topoData, topoData.objects.states);
 
-// Data Organize //
-d3.queue()
-  .defer(d3.csv, "HowManyTrans.csv")
+    var proj = d3.geoAlbersUsa()
+      .fitSize([window.innerWidth/1.5, window.innerHeight/1.5], geoJSON);
 
+// creates a path generator
+    var path = d3.geoPath()
+      .projection(proj);
 
-  .awaitAll(function(error, data){
+    var states = svg.selectAll("path")
+      .data(geoJSON.features);
 
-
-
-   var transData = data[0];
-
-   for (var i = 0; i < transData.length; i++) {
-     console.log(transData[i]);
-   }
-
-    transData.forEach(function(d, i){
-
-      for ( var poop in d){
-        var num = +d[poop];
-        if (isNaN(num) == false) {
-          d[poop] = num;
+      states.enter().append("path")
+      .attr("d", function(d) {
+        return path(d);
+      })
+      .attr("fill", function(d) {
+        var stateId = d.id;
+        var stateName = stateNames[stateId];
+        var mydata = transLookup[stateName];
+        console.log(stateId, stateName, mydata);
+        if (mydata != undefined){
+          var color = colorScale(mydata.PERCENT);
+          return color;
+        }
+        else{
+          return "#ccc";
         }
 
-      }
-    });
-  console.log(transData);
+      });
 
-  });
+    });
 
   // var format = function(d){
   //   d = d * 1000;
