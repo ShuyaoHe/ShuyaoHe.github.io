@@ -1,0 +1,92 @@
+h1{
+  font-family: "Times New Roman";
+  font-size: 2.9rem;
+  line-height: 3.18rem;
+  text-align: left;
+  letter-spacing:
+  color: #000000;
+
+}
+
+h2{
+  font-family: "Times New Roman";
+  font-size: 1.82rem;
+  line-height: 2.18rem;
+  text-align: left;
+  color: #6e767e;
+}
+
+.crosshead{
+  font-family: "Helvetica";
+  font-size: 1.27rem;
+  line-height: 1.54rem;
+  text-align: left;
+  color: #d67d1d;
+
+}
+
+.byline{
+  font-family: "BentonSansComp";
+  font-size: 1rem;
+  line-height: 1.36rem;
+  text-align: left;
+  color: #000000;
+
+}
+
+h4{
+  font-family: "Georgia";
+  font-size: 1rem;
+  line-height: 1.36rem;
+  text-align: justify;
+  color: #000000;
+
+}
+
+.caption{
+  font-family: "Helvetica";
+  font-weight: lighter;
+  font-size: 1rem;
+  line-height: 1.2rem;
+  text-align: left;
+  color: #444345;
+}
+
+.credit{
+  font-family: "Helvetica";
+  font-weight: bold;
+  font-size: 1rem;
+  line-height: 1.2rem;
+  text-align: left;
+  color: #444345;
+}
+
+a{
+  font-family: "Georgia";
+  font-size: 1rem;
+  line-height: 1.36rem;
+  text-align: justify;
+  color: #d67d1d;
+
+}
+
+
+
+.bodytext{
+  font-family: "Georgia";
+  font-size: 1rem;
+  line-height: 1.36rem;
+  text-align: justify;
+  color: #000000;
+
+}
+
+html{
+ margin: 0;
+
+ padding: 0;
+ height: 100%;
+ width: 100%;
+
+
+}

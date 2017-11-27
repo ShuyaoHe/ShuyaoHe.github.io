@@ -4,48 +4,48 @@
         <meta charset = "UTF-8" />
          <title> My Data </title>
          <link href="style.css" rel = "stylesheet" type ="text/css">
-         <!-- <script src="/d3-geomap/vendor/d3.geomap.dependencies.min.js"></script>
-         <script src="/d3-geomap/js/d3.geomap.min.js"></script> -->
 
+         <style>
+               path {
+                 stroke: white;
+                 stroke-width: 0.5px;
+
+               }
+
+             </style>
 
 
       </head>
       <body>
-<!-- creat menu bar -->
-          <!-- <div id = "nav">
-
-           <ul>
-             <li><a href = "index.html">HOME</a></li>
-             <li><a href = "project.html">PROJECT</a>
-             <div class ="owrap">
-               <ol>
-                 <li>
-                   <a href="text.html">PROJECT I</a></li>
-                   <a href="project 3.html">PROJECT II</a></li>
-                   <a href="d3.html">PROJECT III</a></li>
-                   <a href="final.html">FINAL</a></li>
-                   <a href="data.html">DATA</a></li>
-               </ol>
-
-             </div></li>
-             <li><a href = "text.html">CONTACT ME</a></li>
-           </ul>
-         </div> -->
 
 
-  <button class="orange">Switch to Transgender Teens</button>
+  <div id="option2">
+      <input name="switchButton"
+             type="button"
+             value="Switch to Transgender Teens"
+             onclick="updateData('teensPercent')" />
+  </div>
+  <div class="tooltip">
+      <h3 class="state"></h3>
+      <p class="rank"></p>
+      <p class="population"></p>
+      <p class="percentage"></p>
+      <p class="teens"></p>
+      <p class="teensPercent"></p>
+  </div>
 
 
 
-  <svg width="1000" height="600" viewbox="0 0 1200 800">
-    <g id = "map" transform= "translate(280 350)"></g>
 
-    <rect id ="intro" x="-80px" y="40px" width="330px" height="1480px" fill="rgb(202,105,24)"></rect>
-    <text id ="headline1" x="-50" y="140" font-size="30" font-family="Helvetica" font-weight="bold" fill="white">HOW MANY</text>
-    <text id ="headline2" x="-50" y="180" font-size="30" font-family="Helvetica" font-weight="bold" fill="white">TRANSGENDERS</text>
-    <text id ="headline3" x="-50" y="220" font-size="30" font-family="Helvetica" font-weight="bold" fill="white">IN AMERICA?</text>
-    <rect id ="decobar1" x="-55" y="240" width="280" height="6" fill="white"></rect>
-    <text id ="datasource" x="-48" y="280" font-size="20" font-family="Helvetica" fill="white">Datasource: Williams Institute</text>
+  <svg width="1000" height="800" viewbox="0 0 1400 1000">
+    <g id = "map" transform= "translate(420 350)"></g>
+
+    <rect id ="intro" x="-25px" y="0px" width="330px" height="1280px" fill="rgb(202,105,24)"></rect>
+    <text id ="headline1" x="15" y="100" font-size="30" font-family="Helvetica" font-weight="bold" fill="white">HOW MANY</text>
+    <text id ="headline2" x="15" y="140" font-size="30" font-family="Helvetica" font-weight="bold" fill="white">TRANSGENDERS</text>
+    <text id ="headline3" x="15" y="180" font-size="30" font-family="Helvetica" font-weight="bold" fill="white">IN AMERICA?</text>
+    <rect id ="decobar1" x="10" y="200" width="280" height="6" fill="white"></rect>
+    <text id ="datasource" x="15" y="240" font-size="20" font-family="Helvetica" fill="white">Datasource: Williams Institute</text>
 
 
     <text id ="US" x="630" y="100" font-size="25" font-family="Helvetica" font-weight="bold" fill="black">Population:</text>
@@ -55,10 +55,9 @@
 
 
 
-
   </svg>
 
-      <a href="index.html" style="position:absolute; left:140px; top:610px; font-size:13px;">>>>>BACK</a>
+      <a href="index.html" style="position:absolute; left:140px; top:810px; font-size:13px;">>>>>BACK</a>
       <a href="http://tfolkman.github.io/state_map/index.html">Reference</a>
       <div class="usmap">
           <img src = "picture1.png" height = "100">
@@ -128,13 +127,16 @@
 
   var width = 1000, height = 600;
 
+  var states;
+  var transLookup = {};
+
   var svg = d3.select("#map")
     .attr("width", window.innerWidth)
     .attr("height", window.innerHeight);
 
   var colorScale = d3.scaleLinear()
     .domain([0, 0.002, 0.004, 0.006, 0.008])
-    .range(["#FFFDFE","#FFF6E4", "#FFB123", "#E8612D", "#C01803"]);
+    .range(["#FDE6D0", "#FFFDFE", "#FCD0A5", "#FBAE70","#CA6918"]);
 
   // Data Organize //
   d3.queue()
@@ -145,7 +147,6 @@
       var topoData = data[0];
 
      var transData = data[1];
-     var transLookup = {};
       transData.forEach(function(d, i){
 
         for ( var poop in d){
@@ -156,61 +157,108 @@
         }
         transLookup[d.STATE] = d;
       });
-    console.log(transData);
+    console.log(transLookup);
 
 // converts Topojson to
     var geoJSON = topojson.feature(topoData, topoData.objects.states);
 
     var proj = d3.geoAlbersUsa()
-      .fitSize([window.innerWidth/1.5, window.innerHeight/1.5], geoJSON);
+      .fitSize([window.innerWidth/1.2, window.innerHeight/1.2], geoJSON);
 
 // creates a path generator
     var path = d3.geoPath()
       .projection(proj);
 
-    var states = svg.selectAll("path")
-      .data(geoJSON.features);
+    states = svg.selectAll("path")
+      .data(geoJSON.features)
+      .enter().append("path")
+        .attr("d", function(d) {
+          return path(d);
+        })
+      .on("mouseover", function(d){
 
-      states.enter().append("path")
-      .attr("d", function(d) {
-        return path(d);
+              var stateName = stateNames[d.id];
+              var mydata = transLookup[stateName];
+                console.log(mydata);
+                console.log("mouseover");
+
+                // d3.select(this)
+                //   .attr("fill", "red");
+
+              var point= d3.mouse(this);
+              console.log(point);
+              var tooltip =d3.select('.tooltip');
+              tooltip.transition()
+                  .style('opacity',0.7)
+                  .style('left', d3.event.pageX+ "px")
+                  .style('top', d3.event.pageY + "px");
+
+
+                       d3.select(this)
+                         .transition()
+                         .duration(500);
+
+
+
+                  tooltip
+                        .select('.state')
+                        .text(" "+stateName);
+
+                  tooltip
+                        .select('.population')
+                        .text("Transgender Adults Population: "+mydata.POPULATION);
+
+                  tooltip
+                        .select('.percentage')
+                        .text(" Percentage: "+(mydata.PERCENT * 100) + "%");
+
+                  tooltip
+                         .select('.rank')
+                         .text(" Rank: "+mydata.Rank);
+
+                 tooltip
+                        .select('.teens')
+                        .text("Transgender Teens Population: "+mydata.teens);
+                 tooltip
+                        .select('.teensPercent')
+                        .text("Percentage: "+(mydata.teensPercent * 100)+"%");
       })
-      .attr("fill", function(d) {
-        var stateId = d.id;
-        var stateName = stateNames[stateId];
-        var mydata = transLookup[stateName];
-        console.log(stateId, stateName, mydata);
-        if (mydata != undefined){
-          var color = colorScale(mydata.PERCENT);
-          return color;
-        }
-        else{
-          return "#ccc";
-        }
+      .on('mouseout', function () {
+        var tooltip =d3.select('.tooltip');
+        tooltip.transition()
+            .style('opacity',0);
+
+
 
       });
 
+
+      updateData("PERCENT");
+
     });
 
-  // var format = function(d){
-  //   d = d * 1000;
-  //   return d3.format(',.02f')(d) + "%";
-  // }
-  //
-  // var map = d3.geomapChoropleth()
-  //     .geofile('us.json')
-  //     .projection(d3.geoAlbersUsa)
-  //     .colors(colorbrewer.YlGnBu[9])
-  //     .column('[VA]PERCENT')
-  //     .format(format)
-  //     .legend(true)
-  //     .unitId('fips');
-  //
-  // d3.csv('HowManyTrans.csv', function(error, data){
-  //   d3.select('#map')
-  //      .datum(data)
-  //      .call(map.draw, map);
-  // });
+    function updateData(column) {
+
+      states
+        .attr("fill", function(d) {
+          var stateId = d.id;
+          var stateName = stateNames[stateId];
+          var mydata = transLookup[stateName];
+        //  console.log(stateId, stateName, mydata);
+          if (mydata != undefined){
+            var color = colorScale(mydata[column]);
+            return color;
+          }
+          else{
+            return "#ccc";
+          }
+
+        });
+
+    }
+
+
+
 
 </script>
 
