@@ -72,8 +72,10 @@
   d3.queue()
     .defer(d3.json, "us.json")
     .defer(d3.csv, "HowManyTrans.csv")
-    .awaitAll(function(error, data){
-
+    .awaitAll(function(error, data, data2){
+      console.log(error);
+      console.log(data);
+      console.log(data2);
       var topoData = data[0];
 
      var transData = data[1];
@@ -189,8 +191,3 @@
         });
 
     }
-
-
-
-
-</script>
