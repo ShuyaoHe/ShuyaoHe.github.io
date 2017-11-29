@@ -73,7 +73,6 @@
     .defer(d3.json, "us.json")
     .defer(d3.csv, "HowManyTrans.csv")
     .awaitAll(function(error, data, data2){
-      console.log(error);
       console.log(data);
       console.log(data2);
       var topoData = data[0];
