@@ -329,7 +329,7 @@ img{
 
 a   {
     text-decoration: none;
-    border-bottom: 1px orangered solid;
+    border-bottom: 1px #d67d1d solid;
     color: #232323;
     padding-bottom: 2px;
     transition: color 0.3s ease;
@@ -340,11 +340,11 @@ a:visited {
     }
 
 a:hover {
-    color: orangered;
+    color: #d67d1d;
     }
 
 a:active {
-    color: orangered;
+    color: #d67d1d;
     }
 
 h3.state{
