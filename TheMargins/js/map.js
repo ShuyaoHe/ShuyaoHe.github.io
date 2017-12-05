@@ -1,4 +1,11 @@
+var teenMapIndicator = true;
 
+function round(number, precision) {
+    var factor = Math.pow(10, precision);
+    var tempNumber = number * factor;
+    var roundedTempNumber = Math.round(tempNumber);
+    return roundedTempNumber / factor;
+}
 
  var stateNames = {
 
@@ -121,8 +128,8 @@
               var tooltip =d3.select('.tooltip');
               tooltip.transition()
                   .style('opacity',0.7)
-                  .style('left', d3.event.pageX+ "px")
-                  .style('top', d3.event.pageY + "px");
+                  .style('left', d3.event.pageX-50+ "px")
+                  .style('top', d3.event.pageY-1000 + "px");
 
 
                        d3.select(this)
@@ -130,29 +137,18 @@
                          .duration(500);
 
 
+                           if(teenMapIndicator){
 
-                  tooltip
-                        .select('.state')
-                        .text(" "+stateName);
+                             tooltip.html(
+                               stateName + "<br/>Transgender Teens Population: " +mydata.teens+ "<br/>Percentage: "+(round(mydata.teensPercent * 100, 2))+"%"
+                             )
 
-                  tooltip
-                        .select('.population')
-                        .text("Transgender Adults Population: "+mydata.POPULATION);
-
-                  tooltip
-                        .select('.percentage')
-                        .text(" Percentage: "+(mydata.PERCENT * 100) + "%");
-
-                  tooltip
-                         .select('.rank')
-                         .text(" Rank: "+mydata.Rank);
-
-                 tooltip
-                        .select('.teens')
-                        .text("Transgender Teens Population: "+mydata.teens);
-                 tooltip
-                        .select('.teensPercent')
-                        .text("Percentage: "+(mydata.teensPercent * 100)+"%");
+                           } else {
+                             tooltip.html(
+                               stateName + "<br/>Transgender Adults Population: " +mydata.POPULATION+ "<br/>Percentage: "+(round(mydata.PERCENT * 100, 2)) + "%"+"<br/>Rank: "+mydata.Rank
+                             )
+                              
+                  }
       })
       .on('mouseout', function () {
         var tooltip =d3.select('.tooltip');
@@ -167,12 +163,16 @@
       });
 
 
-      updateData("PERCENT");
+      updateData("teensPercent");
 
     });
 
     function updateData(column) {
-
+      if(column =='PERCENT'){
+        teenMapIndicator=false;
+      } else if (column=='teensPercent') {
+        teenMapIndicator = true;
+      }
       states
         .attr("fill", function(d) {
           var stateId = d.id;
