@@ -1,3 +1,6 @@
+
+
+
 var teenMapIndicator = true;
 
 function round(number, precision) {
@@ -62,14 +65,17 @@ function round(number, precision) {
 
  };
 
-  var width = 1000, height = 600;
+
 
   var states;
   var transLookup = {};
+  var margin ={top:20, right:20, bottom:0, left:90},
+      width = 960 - margin.left - margin.right,
+      height = 600 - margin.top - margin.bottom;
 
-  var svg = d3.select("#map")
-    .attr("width", window.innerWidth)
-    .attr("height", window.innerHeight);
+  var svg = d3.select("#map").append("svg")
+    .attr("width", width )
+    .attr("height", height);
 
   var colorScale = d3.scaleLinear()
     .domain([0, 0.002, 0.004, 0.006, 0.008])
@@ -101,7 +107,7 @@ function round(number, precision) {
     var geoJSON = topojson.feature(topoData, topoData.objects.states);
 
     var proj = d3.geoAlbersUsa()
-      .fitSize([window.innerWidth/1.2, window.innerHeight/1.2], geoJSON);
+      .fitSize([960/1.2, 600/1.2], geoJSON);
 
 // creates a path generator
     var path = d3.geoPath()
@@ -128,8 +134,8 @@ function round(number, precision) {
               var tooltip =d3.select('.tooltip');
               tooltip.transition()
                   .style('opacity',0.7)
-                  .style('left', d3.event.pageX-50+ "px")
-                  .style('top', d3.event.pageY-1000 + "px");
+                  .style('left', d3.event.pageX-200 + "px")
+                  .style('top', d3.event.pageY-800 + "px");
 
 
                        d3.select(this)
@@ -147,7 +153,7 @@ function round(number, precision) {
                              tooltip.html(
                                stateName + "<br/>Transgender Adults Population: " +mydata.POPULATION+ "<br/>Percentage: "+(round(mydata.PERCENT * 100, 2)) + "%"+"<br/>Rank: "+mydata.Rank
                              )
-                              
+
                   }
       })
       .on('mouseout', function () {
